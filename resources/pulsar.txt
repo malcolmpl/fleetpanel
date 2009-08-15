@@ -1,0 +1,8 @@
+"Signature Radius","+25%","+44%","+55%","+68%","+85%","+100%"
+"Armor EM Damage Resistance","-10%","-18%","-22%","-27%","-34%","-50%"
+"Armor Kinetic Damage Resistance","-10%","-18%","-22%","-27%","-34%","-50%"
+"Armor Thermal Damage Resistance","-10%","-18%","-22%","-27%","-34%","-50%"
+"Armor Explosive Damage Resistance","-10%","-18%","-22%","-27%","-34%","-50%"
+"Shield Capacity","+25%","+44%","+55%","+68%","+85%","+100%"
+"Capacitor Recharge Rate","+10%","+??%","+27%","+34%","+41%","+50%"
+"Targeting Range","+25%","+44%","+55%","+68%","+85%","+100%"
