@@ -17,6 +17,7 @@ from types import *
 resource_dir = "resources"
 wormhole_space_file = "ws.txt"
 wormhole_anomaly_file = "ws_anom.txt"
+wormhole_file = "wh.txt"
 DELIMITER = ','
 QUOTECHAR = '"'
 SPACECHAR = ' '
@@ -47,11 +48,32 @@ class WhAnomalyProperties:
 	def __init__(self):
 		self.locus_signature = ""
 		self.anomaly_name = ""
+		
+class WhProperty:
+	def __init__(self):
+		self.name = ""
+		self.amount = 0
+		self.description = ""
+		
+	def _set(self, name, amount, description):
+		self.name = name
+		self.amount = int(amount)
+		self.description = description
+
+class Wormhole:
+	def __init__(self):
+		self.system_id = ""
+		self.target_system_class = WhProperty()
+		self.max_stability_window = WhProperty()
+		self.max_mass_capacity = WhProperty()
+		self.mass_regeneration = WhProperty()
+		self.max_jumpable_mass = WhProperty()
 
 class Wormhole_Analyzer:
 	def __init__(self):
 		self._wh_space_systems = []
 		self._wh_anomaly_properties = []
+		self._wh_properties = []
 		self._load()
 		
 	def _readfile(self, filename):
@@ -73,6 +95,30 @@ class Wormhole_Analyzer:
 			self._wh_space_systems.append(ws)
 			
 		self._check_attributes()
+		
+		reader = self._readfile(wormhole_file)
+		for row in reader:
+			wh = Wormhole()
+			for i in range(5):
+				whprop = WhProperty()
+				whprop._set(row[1], row[2], row[3])
+				if i == 0:
+					wh.target_system_class = whprop
+				elif i == 1:
+					wh.max_stability_window = whprop
+				elif i == 2:
+					wh.max_mass_capacity = whprop
+				elif i == 3:
+					wh.mass_regeneration = whprop
+				else:
+					wh.max_jumpable_mass = whprop
+					wh.system_id = row[0]
+				try:
+					row = reader.next()
+				except StopIteration:
+					pass
+			
+			self._wh_properties.append(wh)
 	
 	# Fixme! Totally inefficient finction
 	def _check_attributes(self):
@@ -96,3 +142,14 @@ class Wormhole_Analyzer:
 				return True, whspacesystem
 				
 		return False, None
+		
+	def analyze_wormhole(self, wormhole_name):
+		if type(wormhole_name) is not StringType:
+			return False, None
+			
+		for wh in self._wh_properties:
+			if wormhole_name == wh.system_id:
+				return True, wh
+
+		return False, None
+		
