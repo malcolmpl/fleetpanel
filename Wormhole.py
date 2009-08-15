@@ -89,20 +89,10 @@ class Wormhole_Analyzer:
 		
 	def analyze_system(self, system_name):
 		if type(system_name) is not StringType:
-			raise WhError('System id must be a string type')
-			return None
+			return False, None
 			
 		for whspacesystem in self._wh_space_systems:
 			if system_name == whspacesystem.locus_signature:
-				return whspacesystem
+				return True, whspacesystem
 				
-		raise WhError('Can find specified system id')
-		return None
-		
-		
-class WhError(Exception):
-	def __init__(self, value):
-		self.value = value
-		
-	def __str__(self):
-		return repr(self.value)
+		return False, None
