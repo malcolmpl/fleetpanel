@@ -1,0 +1,50 @@
+# What is the FleetPanel for?
+
+The problem was: in Eve Online, the commanders of fleets (Fleet Commanders, FC) had trouble coordinating large distributed fleets composed of multiple ship types (piloted by humans). Commanding a fleet of a single-type ships in one place was not a problem, but this was rarely the case. The main channel of commanding was issuing voice commands over the voice system to other pilots (humans).
+Eve online has a built-in web browser with some interesting capability of sending some pilot information like his name, corporation, alliance, location (but not ship type). It was also possible to make the web-browser refresh a page every N seconds and after each major action (jumping through a stargate, undocking from a station etc - but not warping).
+I decided to convert my other application (server that have tracked the progress of training pilots) to a FleetPanel. It would track the players who opened their browser on my server's address and process the data and it would then display the summarized data in a form of, say, table. Fleet commander could then read it and base his decisions on the data he would see.
+
+The usuall fleet operation looked like this for it's first 15 minutes:
+FC: Pilot XXX, what ship are You in?
+XXX: Interceptor, sir.
+FC: okay, and where are You?
+XXX: in C9N-CC.
+FC: where exacly? In station?
+XXX: on the gate to X-7-something.
+FC: ok, ok... Pilot YYY, what ship are You in?
+(and this repeated for all fleet members, usually several times, until the FC memorized the current state of the fleet!)
+
+Also ship losses during combat were not tracked very well. Also FC often needed a particular type of ship or a number of ships of given type, so he used to ask pilots to write f.e. "c" for interCeptor on the channel, then pick one of them and send it somewhere... This was all very annoying for the pilots and for the FC. Fleet panel solved all this by processing the headers of the eve's ingame-browser and by getting a shiptype and ship properties (f.e. does the ship have a cloaking device module) through the simple form.
+
+# buffered output
+The Eve ingame browser (IGB) has a bug that makes it load the page 7 seconds longer than usuall (that makes it 10 seconds) if there is no content-length header in the server response. Yes, it takes Eve IGB load the "hello world" page 3 full seconds. Oddly, turning off vsync brings it down to 1s. The bug was reported to the game developers long time ago.
+
+# cache and why
+Some elements are being cached. I cache two levels, one is the Eve API response that is cached on the eve api server side for 6 hours, so there is no point in re-asking. The other level of cache is a html containing some type of data, f.e. a fleet shiptypes summary or a list of recent losses may be cached. Be aware that the fleet commanders using a password always get a recomputed version, so there is no way the FC can have an inaccurate information (besides the IGB not refreshing after a warp).
+But why cache? Isn't this a premature optimalization? No.
+It appears that it's pretty common for the fleets to approach the gate (with a 100-man fleet, mind You) and hold there for a fleet commander command. When the command is issued over the voice channel, every fleet member presses the jump button and suddenly We have 100 requests in a fraction of a second. This became a performance problem and I had to introduce cache. It is usefull for large fleets and the panel was tested in those conditions and worked fine (the "long" requests took 60ms to compute).
+
+# security system
+If You will read the code You will note that the cache and security systems are wrapped into one. This is a pretty uncommon solution, I admit, but as You dig in, it's quite natural. The security system was implemented because the fleet commanders insisted on putting in, though (as I have predicted) they have never actually used the secure mode. The security system can be a great asset in militia fleets, where almost every fleet has an enemy spy inside. The fleet commander would then be the only one who would be able to pull any information out of the fleet panel. If the spy is not the fleet commander, then the fleet panel will not become a great tool for spies.
+
+# security of the browser headers vs passwords
+Someone might try to forge the requests, impersonating an Eve Ingame Browser. This actually is quite easy to do. The code can be easily modified to only allow input from uses who supply a level-0 password that will change frequently or even one that will be diffrent for every pilot. That way We would be able to protect the fleet panel from poisoning it with a malicious data.
+As for now, there is no protection from this issue. This was never a problem, as the alliance using the fleet panel so far had no spies smart enoguh to forge requests.
+
+# coding style, side effects, map/filter
+The project was developed in vim in late 2008 / early 2009.
+In the fleetpanel code I use functional elements like map, reduce, lambda, but I didn't know that the built-in Python map returns a list, not an iterator. Today I would probably have either used [something(x) for x in my_iterable] or itertools.imap(). The latter can be easily refactorized to run on multiple cpus or multiple servers in parallel, so I would probably choose it.
+The code has some side effects (self.out and others) and abuses the 'global' keyword, but usually for global locks and some static final const data.
+The MySQL database is not being used for getting a solarsystem ID from it's name and vice versa... The queries might not be encapsulted in the database object. The autopilot (what required the database) was the last function added to the panel before the project has been abandoned.
+
+# bugs
+There is only one known bug in the panel: autopilot forgets the destination after the page refersh
+There are numerous IGB bugs though.
+
+# The project was abandoned, why
+In the apocryptha patch, Eve Ingame Browser started to freeze the game for a few seconds every 10-20 seconds at a considerable amount of hardware installations my alliance pilots had used. Flying with the Fleet Panel turned on (even when the browser's window was minimized) became impossible for some pilots, so the Fleet Commanders had to stop using the panel. The bug was reported, but they have not fixed it yet and as for now it looks like noone will use the panel again. This is sad. The project became useless because of an outside factor and I could not do anything about it.
+
+# Eve API
+If You want to use Eve api to guess the pilot's ship (eve api is refreshed every 6h though), supply Your corporations directors red API key in LoginData and add the corporation names near "loadednicks" on end of the main file. Refreshing every 6h makes the eve api useless, forget it.
+FIXME: eve api is only queried at the start of the program, not when the cache expires
+

@@ -1,0 +1,8 @@
+# vim:sw=4:softtabstop=4:expandtab:
+
+this program was started as rookie-training accounting database. PilotCustomData.properties is the last mark of that
+
+CacheObject is always expired and never refreshed
+
+lock_warPlayerList is being reused for protecting losses.pkl, this might be fixed... SHIP LOST button was pressed like 5 times (excluding tests) though, so no hurry.
+

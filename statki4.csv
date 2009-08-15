@@ -1,0 +1,35 @@
+# vim:tabstop=8:sw=8:softtabstop=8:
+# format Classname,Shipmodel,Shipmodel2,Shipmodel3...
+NOOBSHIP,Impairor,Ibis,Velator,Reaper
+Frigate,Tormentor,Executioner,Cruicifier,Punisher,Inquisitor,Magnate,Bantam,Condor,Griffin,Heron,Merlin,Kestrel,Navitas,Atron,Maulus,Imicus,Incursus,Tristan,Burst,Slasher,Vigil,Probe,Rifter,Breacher,Amarr Navy Slicer,Caldari Navy Hookbill,Cruor,Daredevil,Dramiel,Gallente Navy Comet,Republic Fleet Firetail,Succubus,Worm
+Destroyer,Coercer,Cormorant,Catalyst,Thrasher
+Cruiser,Arbitrator,Auguror,Maller,Omen,Blackbird,Osprey,Moa,Caracal,Celestis,Exequror,Thorax,Vexor,Bellicose,Scythe,Rupture,Stabber,Ashimmu,Auguror Navy Issue,Caracal Navy Issue,Cynabal,Exequror Navy Issue,Gila,Omen Navy Issue,Osprey Navy Issue,Phantasm,Scythe Fleet Issue,Stabber Fleet Issue,Vexor Navy Issue,Vigilant
+Industrial,Sigil,Bestower,Badger,Badger Mark II,Iteron,Iteron Mark II,Iteron Mark III,Iteron Mark IV,Iteron Mark V
+Transport,Bustard,Wreathe,Hoarder,Mammoth
+BC,Prophecy,Harbinger,Ferox,Drake,Brutix,Myrmidon,Cyclone,Hurricane
+BS,Armageddon,Apocalypse,Abaddon,Scorpion,Raven,Rokh,Dominix,Megathron,Hyperion,Typhoon,Tempest,Maelstrom,Apocalypse Navy Issue,Bhaalgorn,Machariel,Megathron Navy Issue,Nightmare,Rattlesnake,Raven Navy Issue,Tempest Fleet Issue,Vindicator
+Covert,Anathema,Purifier,Buzzard,Manticore,Helios,Nemesis,Cheetah,Hound
+Black Ops,Redeemer,Widow,Sin,Panther
+Electronic Attack,Sentinel,Kitsune,Keres,Hyena
+Assault,Retribution,Vengeance,Harpy,Hawk,Enyo,Ishkur,Wolf,Jaguar
+CEP,Crusader,Malediction,Crow,Raptor,Taranis,Ares,Claw,Stiletto
+DICTOR,Heretic,Flycatcher,Eris,Sabre
+HIC,Devoter,Onyx,Phobos,Broadsword
+Marauder,Paladin,Golem,Kronos,Vargur
+HAC,Sacrilege,Zealot,Eagle,Cerberus,Deimos,Ishtar,Muninn,Vagabond
+Logistic,Guardian,Basilisk,Oneiros,Scimitar
+Recon,Curse,Pilgrim,Rook,Falcon,Lachesis,Arazu,Huginn,Rapier
+Command,Absolution,Damnation,Nighthawk,Vulture,Astarte,Eos,Sleipnir,Claymore
+Transport,Impel,Prorator,Bustard,Crane,Occator,Viator,Mastodon,Prowler
+Freighter,Providence,Charon,Obelisk,Fenrir
+Jump Freighter,Ark,Rhea,Anshar,Nomad
+DREAD,Revelation,Phoenix,Moros,Naglfar
+CAPS,Archon,Chimera,Thanatos,Nidhoggur
+Mothership,Aeon,Wyvern,Nyx,Hel
+TITAN,Avatar,Leviathan,Erebus,Ragnarok
+Mining Barge,Procurer,Retriever,Covetor
+Exhumer,Skiff,Machinaw,Hulk
+Capital Industrial Ship,Rorqual
+EGG,Capsule
+Shuttle,Caldari Shuttle,Amarr Shuttle,Gallente Shuttle,Minmatar Shuttle
+Unknown,Unknown
