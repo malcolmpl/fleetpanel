@@ -12,12 +12,20 @@
 
 import csv
 import os
+from types import *
 
 resource_dir = "resources"
 wormhole_space_file = "ws.txt"
 wormhole_anomaly_file = "ws_anom.txt"
+DELIMITER = ','
+QUOTECHAR = '"'
+SPACECHAR = ' '
+UNDERLINECHAR = '_'
+TXTFILE_EXTENSION = '.txt'
+PNGFILE_EXTENSION = '.png'
+PICTURE_PREFIX = 'pic_'
 
-class WormholeSpace:
+class WhSpaceSystem:
 	def __init__(self):
 		self.locus_signature = ""
 		self.system_id = ""
@@ -27,7 +35,7 @@ class WormholeSpace:
 		self.attributes_modifier = {}
 		self.picture_file = ""
 					
-	def set_detail(self, locus_signature="", system_id="", constellation_id="", region_id="", class_type=""):
+	def set_detail(self, locus_signature, system_id, constellation_id, region_id, class_type):
 		self.locus_signature = locus_signature
 		self.system_id = system_id
 		self.constellation_id = constellation_id
@@ -35,43 +43,66 @@ class WormholeSpace:
 		self.class_type = class_type
 		
 			
-class WormholeAnomaly:
+class WhAnomalyProperties:
 	def __init__(self):
 		self.locus_signature = ""
 		self.anomaly_name = ""
 
-class Wormhole:
+class Wormhole_Analyzer:
 	def __init__(self):
-		self.wormhole_space = []
-		self.wormhole_anomaly = []
-		self.load()
+		self._wh_space_systems = []
+		self._wh_anomaly_properties = []
+		self._load()
 		
-	def load(self):
-		reader = csv.reader(open(resource_dir + '/' + wormhole_anomaly_file), delimiter=',', quotechar='"')
+	def _readfile(self, filename):
+		path = os.path.join(os.path.abspath(''), resource_dir, filename)
+		return csv.reader(open(path), delimiter=DELIMITER, quotechar=QUOTECHAR)
+		
+	def _load(self):
+		reader = self._readfile(wormhole_anomaly_file)
 		for row in reader:
-			wa = WormholeAnomaly()
+			wa = WhAnomalyProperties()
 			wa.locus_signature = row[0]
 			wa.anomaly_name = row[1]
-			self.wormhole_anomaly.append(wa)
+			self._wh_anomaly_properties.append(wa)
 			
-		reader = csv.reader(open(resource_dir + '/' + wormhole_space_file), delimiter=',', quotechar='"')
+		reader = self._readfile(wormhole_space_file)
 		for row in reader:
-			ws = WormholeSpace()
+			ws = WhSpaceSystem()
 			ws.set_detail(row[0], row[1], row[2], row[3], row[4])
-			self.wormhole_space.append(ws)
+			self._wh_space_systems.append(ws)
 			
-		self.check_attributes()
+		self._check_attributes()
 	
 	# Fixme! Totally inefficient finction
-	def check_attributes(self):
-		for wa in self.wormhole_anomaly:
-			for ws in self.wormhole_space:
+	def _check_attributes(self):
+		for wa in self._wh_anomaly_properties:
+			for ws in self._wh_space_systems:
 				if wa.locus_signature == ws.locus_signature and wa.anomaly_name:
-					additional_file = wa.anomaly_name.replace(' ', '_').lower()
-					reader = csv.reader(open(resource_dir + '/' + additional_file + '.txt'), delimiter=',', quotechar='"')
+					additional_file = wa.anomaly_name.replace(SPACECHAR, UNDERLINECHAR).lower()
+					reader = self._readfile(additional_file + TXTFILE_EXTENSION)
 					for row in reader:
 						ws.attributes_modifier[row[0]] = row[int(ws.class_type)-1]
-					filename = os.path.join(os.path.abspath(''), resource_dir, "pic_" + additional_file + '.png')
+					filename = os.path.join(os.path.abspath(''), resource_dir, PICTURE_PREFIX + additional_file + PNGFILE_EXTENSION)
 					if os.path.exists(filename):
 						ws.picture_file = filename
 		
+	def analyze_system(self, system_name):
+		if type(system_name) is not StringType:
+			raise WhError('System id must be a string type')
+			return None
+			
+		for whspacesystem in self._wh_space_systems:
+			if system_name == whspacesystem.locus_signature:
+				return whspacesystem
+				
+		raise WhError('Can find specified system id')
+		return None
+		
+		
+class WhError(Exception):
+	def __init__(self, value):
+		self.value = value
+		
+	def __str__(self):
+		return repr(self.value)
